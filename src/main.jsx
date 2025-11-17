@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./utilities/ThemeProvider.jsx"; // theme provider
 import DataProvider from "./utilities/DataProvider.jsx"; // data provider
-import Dashboard from "./Pages/Dashboard.jsx";
+import Dashboard from "./Pages/DashBoard.jsx";
 import Expense from "./Pages/Expense.jsx";
 import Income from "./Pages/Income.jsx";
 import Investments from "./Pages/Investments.jsx";
