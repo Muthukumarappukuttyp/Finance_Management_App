@@ -18,7 +18,6 @@ const Dashboard = () => {
   const { income, expenses, savings, loading } = useData();
   const [showAll, setShowAll] = useState(false);
 
-  // ----------------- Prepare chart data (monthly) -----------------
   const chartData = useMemo(() => {
     const months = Array.from({ length: 12 }, (_, i) => i);
     return months.map(month => {
@@ -36,13 +35,11 @@ const Dashboard = () => {
     });
   }, [income, expenses]);
 
-  // ----------------- Totals -----------------
   const totalIncome = useMemo(() => income.reduce((sum, item) => sum + item.amount, 0), [income]);
   const totalExpense = useMemo(() => expenses.reduce((sum, item) => sum + item.amount, 0), [expenses]);
   const totalSavings = useMemo(() => savings.reduce((sum, item) => sum + item.amount, 0), [savings]);
   const walletBalance = totalIncome - totalExpense;
 
-  // ----------------- Recent transactions -----------------
   const transactions = useMemo(() => {
     return [
       ...income.map(i => ({ ...i, type: "Income" })),
@@ -58,7 +55,7 @@ const Dashboard = () => {
   return (
     <div className={`w-full h-full p-4 space-y-6 transition-colors duration-100 ease-in-out ${darkMode ? "bg-neutral-900 text-gray-100" : "bg-gray-100 text-gray-900"}`}>
 
-      {/* -------------------- TOP CARDS -------------------- */}
+      {/* Top Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Income", value: totalIncome, icon: ArrowUpCircle, color: "green" },
@@ -87,7 +84,7 @@ const Dashboard = () => {
         })}
       </div>
 
-      {/* -------------------- Income vs Expense Line Chart -------------------- */}
+      {/* Line Chart */}
       <div className={`p-5 rounded-xl shadow transition-colors duration-100 ease-in-out ${darkMode ? "bg-neutral-900" : "bg-white"}`}>
         <h3 className={`text-lg font-semibold mb-2 transition-colors duration-100 ease-in-out ${darkMode ? "text-gray-100" : "text-gray-900"}`}>
           Income vs Expense (Monthly)
@@ -105,22 +102,27 @@ const Dashboard = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* -------------------- RECENT TRANSACTIONS -------------------- */}
+      {/* Recent Transactions */}
       <div className={`p-5 rounded-xl shadow transition-colors duration-100 ease-in-out ${darkMode ? "bg-neutral-900" : "bg-white"}`}>
         <h3 className={`text-lg font-semibold mb-4 transition-colors duration-100 ease-in-out ${darkMode ? "text-gray-100" : "text-gray-900"}`}>
           Recent Transactions
         </h3>
         <div className="space-y-3">
           {displayedTransactions.length === 0 ? (
-            <p className={`transition-colors duration-100 ease-in-out ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
               No transactions yet.
             </p>
           ) : (
             displayedTransactions.map(tx => (
-              <div key={tx.id} className={`flex justify-between items-center p-3 rounded-lg transition-colors duration-150 ease-in-out ${darkMode ? "bg-neutral-800" : "bg-neutral-50"}`}>
+              <div
+                key={`${tx.type}-${tx.id}`}
+                className={`flex justify-between items-center p-3 rounded-lg transition-colors duration-150 ease-in-out ${darkMode ? "bg-neutral-800" : "bg-neutral-50"}`}
+              >
                 <div>
                   <p className="font-medium">{tx.description || tx.source}</p>
-                  <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{new Date(tx.date).toLocaleDateString()}</p>
+                  <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    {new Date(tx.date).toLocaleDateString()}
+                  </p>
                 </div>
                 <p className={`${tx.type === "Income" ? "text-green-600" : tx.type === "Expense" ? "text-red-500" : "text-blue-600"} font-semibold`}>
                   {tx.type === "Income" ? "+" : tx.type === "Expense" ? "-" : "+"} ₹ {tx.amount.toLocaleString()}
@@ -139,7 +141,6 @@ const Dashboard = () => {
           </button>
         )}
       </div>
-
     </div>
   );
 };
